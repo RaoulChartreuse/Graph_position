@@ -1,0 +1,8 @@
+<resources>
+    <declare-styleable name="BoussoleView">
+        <attr name="backgroundColor" format="color" />
+
+
+    </declare-styleable>
+
+</resources>

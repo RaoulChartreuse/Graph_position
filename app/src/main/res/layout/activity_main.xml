@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:ap="http://schemas.android.com/apk/res-auto"
+    tools:context=".MainActivity"
+
+    >
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimaryDark"
+        android:elevation="15dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+
+    <TextView
+        android:id="@+id/titre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hello World!"
+        app:layout_constraintHorizontal_bias="0.047"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/my_toolbar" />
+
+    <TextView
+        android:id="@+id/text_gx"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/gx"
+        app:layout_constraintHorizontal_bias="0.054"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/titre" />
+
+    <TextView
+        android:id="@+id/text_gy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/gy"
+        app:layout_constraintHorizontal_bias="0.054"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_gx" />
+
+    <TextView
+        android:id="@+id/text_gz"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/gz"
+        app:layout_constraintHorizontal_bias="0.054"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_gy" />
+
+    <TextView
+        android:id="@+id/value_gx"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0 m/s2"
+        app:layout_constraintLeft_toRightOf="@id/text_gx"
+        app:layout_constraintTop_toBottomOf="@id/titre"/>
+
+    <TextView
+        android:id="@+id/value_gy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0 m/s2"
+        app:layout_constraintLeft_toRightOf="@id/text_gy"
+        app:layout_constraintTop_toBottomOf="@id/text_gx"/>
+    <TextView
+        android:id="@+id/value_gz"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0 m/s2"
+        app:layout_constraintLeft_toRightOf="@id/text_gz"
+        app:layout_constraintTop_toBottomOf="@id/text_gy"/>
+
+    <com.androidplot.xy.XYPlot
+        android:id="@+id/plot"
+        style="@style/APDefacto.Dark"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        ap:backgroundColor="?attr/colorPrimaryDark"
+        ap:titleTextColor="@color/orange"
+        ap:domainTitleTextColor="@color/base0"
+        ap:rangeTitleTextColor="@color/base0"
+        ap:domainLineColor="@color/base0"
+        ap:rangeLineColor="@color/base0"
+        ap:domainOriginLineColor="@color/base1"
+        ap:rangeOriginLineColor="@color/base1"
+        ap:lineLabelTextColorTop="@color/base0"
+        ap:lineLabelTextColorBottom="@color/base0"
+        ap:lineLabelTextColorLeft="@color/base0"
+        ap:legendTextColor="@color/base0"
+        ap:lineLabelTextColorRight="@color/base0"
+        ap:gridBackgroundColor="?attr/colorPrimary"
+        ap:graphBackgroundColor ="?attr/colorPrimaryDark"
+        ap:borderColor ="?attr/colorPrimary"
+
+        ap:rangeTitle="m/s^2"
+        ap:title="Graph de g(t)"
+        ap:domainTitle="Temps en ms"
+
+        ap:lineLabelRotationBottom="-45"
+        ap:lineLabels="left|bottom"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_gz" />
+
+
+</android.support.constraint.ConstraintLayout>

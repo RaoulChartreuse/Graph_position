@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Graph_position</string>
+    <string name="gx">Accéllération en x :</string>
+    <string name="gy">Accéllération en y :</string>
+    <string name="gz">Accéllération en z :</string>
+    <string name="action_favorite">action favorite</string>
+    <string name="action_back">action back</string>
+    <string name="action_flip">action_flip</string>
+    <string name="title_activity_flip2_snooze">flip2Snooze</string>
+</resources>
