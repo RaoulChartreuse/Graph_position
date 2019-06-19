@@ -3,7 +3,6 @@ package fr.lmorin.graph_position;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -18,9 +17,13 @@ import static java.lang.Math.sqrt;
 public class BoussoleView extends View {
 
     private Paint paint;
-    float scale;
-    int cBackground;
-    Paint pBold,  pArrow, pVector;
+    private float scale;
+    private int cBackground;
+    private String horizontalAxisLegend;
+    private String verticalAxisLegend;
+    private Paint pBold,  pArrow, pVector;
+    private int width, height;
+    private float    g1 ,  g2 ;
 
     public BoussoleView(Context context){
         super(context);
@@ -34,6 +37,8 @@ public class BoussoleView extends View {
 
     private void init(Context context, @Nullable AttributeSet attrs){
 
+
+
         TypedArray a = context.getTheme().obtainStyledAttributes(
             attrs,
             R.styleable.BoussoleView,
@@ -41,6 +46,13 @@ public class BoussoleView extends View {
         try {
             cBackground =  a.getColor(R.styleable.BoussoleView_backgroundColor ,
                         getResources().getColor(R.color.base02));
+            if(a.hasValue(R.styleable.BoussoleView_horizontalAxisLegend)) {
+                horizontalAxisLegend = a.getString(R.styleable.BoussoleView_horizontalAxisLegend);
+            }
+            else horizontalAxisLegend="g_h";
+            if(a.hasValue(R.styleable.BoussoleView_verticalAxisLegend))
+                verticalAxisLegend = a.getString(R.styleable.BoussoleView_verticalAxisLegend);
+            else verticalAxisLegend = "g_v";
 
         }finally {
             a.recycle();
@@ -61,11 +73,14 @@ public class BoussoleView extends View {
         pArrow = new Paint();
         pArrow.setStrokeWidth(scale*2);
         pArrow.setColor(getResources().getColor(R.color.yellow));
-        pArrow.setTextSize(18*scale);
+        pArrow.setTextSize(14*scale);
 
         pVector = new Paint();
         pVector.setStrokeWidth(scale*2.1f);
         pVector.setColor(getResources().getColor(R.color.red));
+
+        g1=0.f;
+        g2=0.f;
 
     }
 
@@ -101,12 +116,11 @@ public class BoussoleView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        int x = getWidth();
-        int y = getHeight();
-        String sX = "x";
-        String sY = "y";
-        float g1 = 0.6f;
-        float g2 = -5.2f;
+        super.onDraw(canvas);
+
+        int x = width;
+        int y = height;
+
 
 
         int radius = (int) ((min(x,y)-scale*4)/2);
@@ -119,13 +133,31 @@ public class BoussoleView extends View {
 
 
         drawArrow(x/2,y/2,x/2+radius, y/2,
-                sX, canvas, pArrow);
+                horizontalAxisLegend, canvas, pArrow);
         drawArrow(x/2,y/2,x/2, y/2-radius,
-                sY, canvas, pArrow);
+                verticalAxisLegend, canvas, pArrow);
 
 
         drawArrow(x/2, y/2, x/2+g1*radius/9.81f, y/2-g2*radius/9.81f,
-                "g_xy", canvas, pVector);
+                "g", canvas, pVector);
 
     }
+
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh){
+		width = w;
+		height = h;
+		invalidate();
+        requestLayout();
+
+    }
+
+    public void setGrav(float g_h, float g_v){
+        g1 = g_h;
+        g2 = g_v;
+        invalidate();
+
+    }
+
 }

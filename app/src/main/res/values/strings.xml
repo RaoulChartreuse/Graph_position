@@ -7,4 +7,6 @@
     <string name="action_back">action back</string>
     <string name="action_flip">action_flip</string>
     <string name="title_activity_flip2_snooze">flip2Snooze</string>
+    <string name="default_horizontal">g_x</string>
+    <string name="default_vertical">g_y</string>
 </resources>

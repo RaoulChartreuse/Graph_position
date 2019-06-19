@@ -1,8 +1,8 @@
 <resources>
     <declare-styleable name="BoussoleView">
         <attr name="backgroundColor" format="color" />
-
-
+        <attr name="horizontalAxisLegend" format="string"/>
+        <attr name="verticalAxisLegend" format="string" />
     </declare-styleable>
 
 </resources>

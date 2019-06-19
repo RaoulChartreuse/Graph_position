@@ -19,7 +19,8 @@
         <activity
             android:name=".flip2Snooze"
             android:label="@string/title_activity_flip2_snooze"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".opengl_arrow"
             android:parentActivityName=".MainActivity"

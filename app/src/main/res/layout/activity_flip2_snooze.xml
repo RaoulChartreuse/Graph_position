@@ -1,25 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".flip2Snooze">
 
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+    <fr.lmorin.graph_position.BoussoleView
+        android:id="@+id/boussole_xy"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/boussole_yz"
+        app:layout_constraintStart_toStartOf="parent"
+        app:verticalAxisLegend="g_y"
+        app:horizontalAxisLegend="g_x"
+        />
 
-    </android.support.design.widget.AppBarLayout>
+    <fr.lmorin.graph_position.BoussoleView
+        android:id="@+id/boussole_xz"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@id/boussole_xy"
+        app:layout_constraintStart_toEndOf="@id/boussole_yz"
+        app:layout_constraintTop_toTopOf="parent"
+        app:verticalAxisLegend="g_z"
+        app:horizontalAxisLegend="g_x"
+        />
 
-    <include layout="@layout/content_flip2_snooze" />
+    <fr.lmorin.graph_position.BoussoleView
+        android:id="@+id/boussole_yz"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@id/boussole_xy"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:verticalAxisLegend="g_z"
+        app:horizontalAxisLegend="g_y"/>
 
-</android.support.design.widget.CoordinatorLayout>
+</android.support.constraint.ConstraintLayout>
