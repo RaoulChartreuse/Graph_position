@@ -27,7 +27,7 @@ public class BoussoleView extends View {
     private boolean show_extralines;
     private float Xlines_h, Xlines_v;
     private Paint pXline;
-    static float theta = (float) (15f*Math.PI/180.f);
+    static float theta = (float) (25f*Math.PI/180.f);
 
     public BoussoleView(Context context){
         super(context);
@@ -96,8 +96,8 @@ public class BoussoleView extends View {
     public void enableXlines(){
         show_extralines = true;
         double norm = 1.0/ sqrt(g1*g1+g2*g2);
-        Xlines_h = (float) (g1*norm);
-        Xlines_v = (float) -(g2*norm);// ! our Vertical axis is reversed
+        Xlines_h = (float) -(g1*norm);
+        Xlines_v = (float) (g2*norm);// ! our Vertical axis is reversed
 
     }
 
@@ -115,7 +115,7 @@ public class BoussoleView extends View {
     protected void drawXlines(float x, float y, float radius, Canvas canvas, Paint p){
         float dx = radius*Xlines_h;
         float dy = radius*Xlines_v;
-        canvas.drawLine(x,y, x+dx, y+dy,  pBold);
+        canvas.drawLine(x,y, x-dx, y-dy,  pBold);
         float dx1 = (float) (cos(theta)*dx-sin(theta)*dy);
         float dy1 = (float) (sin(theta)*dx+cos(theta)*dy);
         canvas.drawLine(x,y,x+dx1, y+dy1,p);

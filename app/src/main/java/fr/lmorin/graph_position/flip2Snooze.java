@@ -1,14 +1,20 @@
 package fr.lmorin.graph_position;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -17,13 +23,17 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
-public class flip2Snooze extends AppCompatActivity {
+import static java.lang.Math.cos;
+import static java.lang.Math.sqrt;
 
+public class flip2Snooze extends AppCompatActivity {
+    private static final String TAG = "flip2Snooze";
     private SensorManager mSensorManager = null;
     private Sensor mAccelerometer = null;
     private BoussoleView bView_xy, bView_xz, bView_yz;
     private float[] gravity ;
     private boolean started;
+    MediaPlayer mp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,16 +55,78 @@ public class flip2Snooze extends AppCompatActivity {
 
         started =false;
 
+        mp =  MediaPlayer.create(this, R.raw.piano);
+
     }
+
+
+    private final String FLIP_DURATION="flip duration";
+    @SuppressLint("HandlerLeak")
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            int duration = msg.getData().getInt(FLIP_DURATION);
+
+            mp.start();
+
+            String text = "flipped!";
+
+            Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
+            toast.show();
+
+        }
+    };
 
 
     //Linked by the xml layout
     public void start_sequence(View v) {
+        Thread background = new Thread(new Runnable() {
+            Bundle messageBundle=new Bundle();
+            Message myMessage;
+            float ux, uy, uz;
+
+            private boolean test(){
+                float norm = (float) sqrt(gravity[0]*gravity[0]+gravity[1]*gravity[1]+gravity[2]*gravity[2]);
+                float c_alpha = (ux * gravity[0] + uy * gravity[1] + uz * gravity[2]) / norm;
+                Log.v(TAG, "c_alpha=" + c_alpha);
+                return (c_alpha>cos(30.*Math.PI/180.)) && (norm > (9.81f*0.85f));
+
+            }
+
+            public void run() {
+                try {
+
+
+                    long tStart = SystemClock.elapsedRealtime();
+                    ux = -gravity[0];
+                    uy = -gravity[1];
+                    uz = -gravity[2];
+                    double norm = 1 / sqrt(ux * ux + uy * uy + uz * uz);
+                    ux = (float) (ux * norm);
+                    uy = (float) (uy * norm);
+                    uz = (float) (uz * norm);
+
+                    while (!test()) {
+                        Thread.sleep(200);
+                    }
+                    long tEnd = SystemClock.elapsedRealtime();
+
+                    myMessage=handler.obtainMessage();
+                    messageBundle.putInt(FLIP_DURATION, (int) (tEnd-tStart));
+                    myMessage.setData(messageBundle);
+                    handler.sendMessage(myMessage);
+                }catch (Throwable t) {
+                    // gérer l'exception et arrêter le traitement ??
+                }
+            }
+
+        });
         if (!started){
             bView_xy.enableXlines();
             bView_xz.enableXlines();
             bView_yz.enableXlines();
             started = true;
+            background.start();
         }
         else{
             bView_xy.disableXline();
@@ -62,6 +134,10 @@ public class flip2Snooze extends AppCompatActivity {
             bView_yz.disableXline();
             started = false;
         }
+
+
+
+
     }
 
     @Override
@@ -84,7 +160,7 @@ public class flip2Snooze extends AppCompatActivity {
         }
 
         public void onSensorChanged(SensorEvent sensorEvent) {
-            final float alpha = 0.98f;
+            final float alpha = 0.85f;
             // Isolate the force of gravity with the low-pass filter.
             gravity[0] = alpha * gravity[0] - (1 - alpha) * sensorEvent.values[0];
             gravity[1] = alpha * gravity[1] - (1 - alpha) * sensorEvent.values[1];
