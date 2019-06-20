@@ -24,6 +24,8 @@ import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYPlot;
 
+import static java.lang.Math.sqrt;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -142,6 +144,10 @@ public class MainActivity extends AppCompatActivity {
             seriesx.addLast(null, gravity[0]);
             seriesy.addLast(null, gravity[1]);
             seriesz.addLast(null, gravity[2]);
+
+            TextView titre = findViewById(R.id.titre);
+            float norm = (float) sqrt(gravity[0]*gravity[0]+gravity[1]*gravity[1]+gravity[2]*gravity[2]);
+            titre.setText(Html.fromHtml(String.format("%.2f",norm) ));
 
         }
     };

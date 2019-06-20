@@ -12,7 +12,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.Toast;
 
 public class flip2Snooze extends AppCompatActivity {
@@ -21,7 +23,7 @@ public class flip2Snooze extends AppCompatActivity {
     private Sensor mAccelerometer = null;
     private BoussoleView bView_xy, bView_xz, bView_yz;
     private float[] gravity ;
-
+    private boolean started;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,26 @@ public class flip2Snooze extends AppCompatActivity {
         bView_yz = findViewById(R.id.boussole_yz);
 
         gravity = new float[]{0f, 0f, 0f};
+
+        started =false;
+
+    }
+
+
+    //Linked by the xml layout
+    public void start_sequence(View v) {
+        if (!started){
+            bView_xy.enableXlines();
+            bView_xz.enableXlines();
+            bView_yz.enableXlines();
+            started = true;
+        }
+        else{
+            bView_xy.disableXline();
+            bView_xz.disableXline();
+            bView_yz.disableXline();
+            started = false;
+        }
     }
 
     @Override
@@ -62,8 +84,7 @@ public class flip2Snooze extends AppCompatActivity {
         }
 
         public void onSensorChanged(SensorEvent sensorEvent) {
-            final float alpha = 0.85f;
-
+            final float alpha = 0.98f;
             // Isolate the force of gravity with the low-pass filter.
             gravity[0] = alpha * gravity[0] - (1 - alpha) * sensorEvent.values[0];
             gravity[1] = alpha * gravity[1] - (1 - alpha) * sensorEvent.values[1];
