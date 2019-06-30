@@ -7,10 +7,12 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -24,6 +26,9 @@ import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYPlot;
 
+import java.util.List;
+
+import static java.lang.Math.exp;
 import static java.lang.Math.sqrt;
 
 
@@ -39,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     private Redrawer redrawer;
     private static final int HISTORY_SIZE = 1000;
     private float[] gravity ;
+    private long tStart;
 
     public static final String EXTRA_MESSAGE = "fr.lmorin.graph_position.launch_flip_activity";
 
@@ -87,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(myToolbar);
 
 
-
+        tStart = SystemClock.elapsedRealtime();
 
     }
 
@@ -120,7 +126,27 @@ public class MainActivity extends AppCompatActivity {
         }
 
         public void onSensorChanged(SensorEvent sensorEvent) {
-            final float alpha = 0.95f;
+            /*Let's take the z transform of our filter :
+            y[k] = \alpha y[k-1] + (1-\alpha) x[k]
+            = z > Y[z] = \alpha z**(-1) Y[z] + (1-\alpha) X[z]
+            Y[z] ( 1 - alpha z**-1) = (1-\alpha) X[z]
+            H[z]=Y[z]/X[z] = (1-\alpha) / (1- \alpha z**-1)
+            This is the 1st order Low-pass filter then :
+               \alpha = exp(- dt / \tau)
+            whit dt the sampling time and tau the time constrain of the filter
+            You will need 3 \tau to get 95 %
+            So time to flip :
+                t_flip = 3 * \tau then
+                \alpha = exp(-3 * dt / t_flip)
+            */
+
+            long tNow = SystemClock.elapsedRealtime();
+            double dt = (tNow-tStart)*.001;
+            final double t_flip = 2;// en seconde
+            tStart= tNow;
+
+            //float alpha = 0.95f;
+            float alpha = (float) exp(-3*dt/t_flip);
 
             // Isolate the force of gravity with the low-pass filter.
             gravity[0] = alpha * gravity[0] - (1 - alpha) * sensorEvent.values[0];
@@ -145,9 +171,7 @@ public class MainActivity extends AppCompatActivity {
             seriesy.addLast(null, gravity[1]);
             seriesz.addLast(null, gravity[2]);
 
-            TextView titre = findViewById(R.id.titre);
-            float norm = (float) sqrt(gravity[0]*gravity[0]+gravity[1]*gravity[1]+gravity[2]*gravity[2]);
-            titre.setText(Html.fromHtml(String.format("%.2f",norm) ));
+
 
         }
     };

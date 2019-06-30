@@ -24,6 +24,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import static java.lang.Math.cos;
+import static java.lang.Math.exp;
 import static java.lang.Math.sqrt;
 
 public class flip2Snooze extends AppCompatActivity {
@@ -34,6 +35,7 @@ public class flip2Snooze extends AppCompatActivity {
     private float[] gravity ;
     private boolean started;
     MediaPlayer mp;
+    long tStart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +58,7 @@ public class flip2Snooze extends AppCompatActivity {
         started =false;
 
         mp =  MediaPlayer.create(this, R.raw.piano);
-
+        tStart= SystemClock.elapsedRealtime();
     }
 
 
@@ -160,7 +162,13 @@ public class flip2Snooze extends AppCompatActivity {
         }
 
         public void onSensorChanged(SensorEvent sensorEvent) {
-            final float alpha = 0.85f;
+            long tNow = SystemClock.elapsedRealtime();
+            double dt = (tNow-tStart)*.001;
+            final double t_flip = 1.5;
+            tStart= tNow;
+
+            //float alpha = 0.95f;
+            float alpha = (float) exp(-3*dt/t_flip);
             // Isolate the force of gravity with the low-pass filter.
             gravity[0] = alpha * gravity[0] - (1 - alpha) * sensorEvent.values[0];
             gravity[1] = alpha * gravity[1] - (1 - alpha) * sensorEvent.values[1];

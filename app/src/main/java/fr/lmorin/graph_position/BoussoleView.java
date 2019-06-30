@@ -198,4 +198,42 @@ public class BoussoleView extends View {
 
     }
 
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec){
+        int desireW = 220;
+
+        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
+        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
+
+        int width;
+        int height;
+
+        //Measure Width
+        if (widthMode == MeasureSpec.EXACTLY) {
+            //Must be this size
+            width = widthSize;
+        } else if (widthMode == MeasureSpec.AT_MOST) {
+            //Can't be bigger than...
+            width = Math.min(desireW, widthSize);
+        } else {
+            //Be whatever you want
+            width = desireW;
+        }
+        //Measure Height
+        if (heightMode == MeasureSpec.EXACTLY) {
+            //Must be this size
+            height = heightSize;
+        } else if (heightMode == MeasureSpec.AT_MOST) {
+            //Can't be bigger than...
+            height = Math.min(desireW, heightSize);
+        } else {
+            //Be whatever you want
+            height = desireW;
+        }
+
+        setMeasuredDimension(width, height);
+    }
+
 }
